@@ -50,29 +50,7 @@ public class MemoryAllocationLab {
 					allocate(processName, size);
 				} else if (parts[0].equalsIgnoreCase("RELEASE")) {
 					String processName = parts[1];
-
-					for (int i = 0; i < memory.size(); i++) {
-						MemoryBlock block = memory.get(i);
-						if (!block.isFree() && block.processName.equals(processName)) {
-							block.processName = null;
-
-							if (i > 0 && memory.get(i - 1).isFree()) {
-								MemoryBlock prev = memory.get(i - 1);
-								prev.size += block.size;
-								memory.remove(i);
-								i--;
-								block = prev;
-							}
-
-							if (i < memory.size() - 1 && memory.get(i + 1).isFree()) {
-								MemoryBlock next = memory.get(i + 1);
-								block.size += next.size;
-								memory.remove(i + 1);
-							}
-
-							break;
-						}
-					}
+					deallocate(processName);
 				}
 			}
 
@@ -85,9 +63,7 @@ public class MemoryAllocationLab {
 
 	for (int i = 0; i < memory.size(); i++) {
             MemoryBlock block = memory.get(i);
-
             if (block.isFree() && block.size >= size) {
-
                 if (block.size == size) {
                     block.processName = processName;
                 } else {
@@ -96,7 +72,6 @@ public class MemoryAllocationLab {
                             block.size - size,
                             null
                     );
-
                     block.size = size;
                     block.processName = processName;
 
@@ -104,14 +79,41 @@ public class MemoryAllocationLab {
                 }
 
                 successfulAllocations++;
-                System.out.println("REQUEST " + processName + " " + size + " KB");
+                System.out.println("REQUEST " + processName + " " + size + " KB → SUCCESS");
                 return;
             }
         }
 
         failedAllocations++;
-        System.out.println("RELEASE " + processName + " " + size + " KB");
+        System.out.println("REQUEST " + processName + " " + size + " KB → FAILED");
     }
+	private static void deallocate(String processName) {
+    		for (int i = 0; i < memory.size(); i++) {
+        		MemoryBlock block = memory.get(i);
+
+		        if (!block.isFree() && processName.equals(block.processName)) {
+		        	block.processName = null;
+		        	System.out.println("RELEASE " + processName + "→ SUCCESS");
+		        	mergeAdjacentBlocks();
+		        	return; 
+		        }
+	 	 }
+		System.out.println("RELEASE " + processName + " → FAILED");
+	}
+
+
+	private static void mergeAdjacentBlocks() {
+    		for (int i = 0; i < memory.size() - 1; i++) {
+			MemoryBlock current = memory.get(i);
+			MemoryBlock next = memory.get(i + 1);
+	        
+	       	 	if (current.isFree() && next.isFree()) {
+		            current.size += next.size;
+		            memory.remove(i + 1);
+		            i--;
+	       		 }
+	   	 }
+	}
 
     public static void displayStatistics() {
         System.out.println("\n========================================");
