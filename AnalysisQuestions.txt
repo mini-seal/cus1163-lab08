@@ -2,7 +2,7 @@
 
       50 to 99 = 50, 500 to 1023 = 524 
       50 + 524 = 574 
-      100(Total-largest)/total = 100(574-524)/574 =~ 8.7% 
+      100(Total-largest)/total = 100(574-524)/574 =~ 8.71% 
 
       Free memory becomes fragmented because memory is allocated and released over time. 
       When a process is freed, it leaves behind its space in memory, which other processes can use. 
