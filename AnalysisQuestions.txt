@@ -1,0 +1,42 @@
+1. Fragmentation Analysis: In the basic example, what is the external fragmentation percentage? Explain why free memory becomes fragmented. 
+
+      50 to 99 = 50, 500 to 1023 = 524 
+      50 + 524 = 574 
+      100(Total-largest)/total = 100(574-524)/574 =~ 8.7% 
+
+      Free memory becomes fragmented because memory is allocated and released over time. 
+      When a process is freed, it leaves behind its space in memory, which other processes can use. 
+      However, the next process may not ‘fit’ the same; it may only partially fill the available space. 
+      This results in multiple separated free blocks, instead of one large continuous block, which limits the amount of processing that uses the memory.   
+
+2. First-Fit Efficiency: Why does P4 use the block left by P1 even though it's larger than needed? What happens to the unused portion? 
+
+      P4 uses the block left by P1 even though it is larger than needed because First-Fit allocation selects 
+      the first available block that is large enough, without searching for a better option. First-Fit prioritizes 
+      speed over space efficiency, unlike Best-Fit, which focuses on minimizing wasted space. The unused portion of 
+      the block is split off into a smaller free block that future processes can use. 
+
+3. Allocation Patterns: Compare workload1.txt (many small processes) with workload2.txt (few large processes). Which creates more fragmentation? Why? 
+
+      Workload1.txt creates more fragmentation because frequent allocations and small processes create and use many 
+      small gaps in memory, leaving behind free spaces that are most likely to be too small for other processes to use. 
+      Workload2.txt has fewer, larger allocations, so memory is divided into larger blocks with fewer gaps and less fragmentation. 
+
+4. Failed Allocations: Create a scenario where an allocation fails even though the total free memory is larger than the request. Why does this happen? 
+
+	    Given a total memory of 300KB, there are two free blocks of 200KB and 100KB. A process needs 250KB of memory.   
+
+	    In this scenario, allocation fails because, even though we have 300KB of total free memory, there are no single blocks 
+      large enough to handle the 250KB process. Over time, memory is split as processes are allocated and released at different points in memory.  
+      These split pieces do not re-combine and remain separate. Thus, even though the total amount of free space is greater than our process size, 
+      no block is large enough for it. 
+
+5. Algorithm Comparison: How might Best-Fit allocation handle the basic example differently than First-Fit? Would it reduce fragmentation? 
+
+	    Best-Fit allocation would handle the basic example by selecting the smallest free block that meets the process's required size. 
+      Unlike first-fit, which chooses the first block it finds that is large enough, Best-fit traverses all free blocks to find the most 
+      efficient fit for the process. In the basic example we are given, First-Fit and Best-fit result in the same placement of P4.   
+
+    	Generally, Best-fit can reduce wasted space because larger blocks would remain available for larger processes. However, it can still 
+      increase fragmentation because repeatedly splitting smaller blocks will eventually create small leftover memory spaces that may not be 
+      useful to future processes.   
